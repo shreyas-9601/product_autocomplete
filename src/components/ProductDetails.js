@@ -1,23 +1,11 @@
 import React, { useState } from "react";
 
-function ProductDetails({ product, searchPerformed }) {
+function ProductDetails({ product }) {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
     setShowModal(!showModal);
   };
-
-  if (!searchPerformed) {
-    return null;
-  }
-
-  if (!product) {
-    return (
-      <div className="alert alert-danger">
-        <p>No product found</p>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -47,7 +35,6 @@ function ProductDetails({ product, searchPerformed }) {
           </tbody>
         </table>
       <button
-        className="btn-secondary"
         onClick={() => {
           toggleModal();
         }}

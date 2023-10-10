@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function SearchBar({ onSearch, productData }) {
   const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    setSuggestions(productData);
+  }, [productData]);
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
+
+    const filteredSuggestions = productData.filter((product) =>
+      product.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(filteredSuggestions);
   };
 
   const handleSearch = () => {
@@ -14,20 +25,7 @@ function SearchBar({ onSearch, productData }) {
 
     onSearch(matchingProducts);
   };
-
-  const suggestions = productData.filter(
-    (product) => product.name.toLowerCase().includes(inputValue.toLowerCase())
-    )
-    .map((product) => (
-      <div 
-        key={product.id}
-        onClick={() => setInputValue(product.name)}
-        className="suggestion-item"
-      >
-        {product.name}
-      </div>
-    ));
-
+                  
   return (
     <div className="input-group mb-3">
       <input
@@ -36,15 +34,16 @@ function SearchBar({ onSearch, productData }) {
         placeholder="Enter Product Name"
         value={inputValue}
         onChange={handleInputChange}
+        list="datalistOptions"
       />
 
-      <div className="autocomplete-suggestions">
-            {suggestions}
-      </div>
+      <datalist id="datalistOptions">
+        {suggestions.map((product) => (
+          <option key={product.id} value={product.name} />
+        ))}
+      </datalist>
 
       <button 
-        type="button" 
-        className="btn-dark" 
         onClick={handleSearch}
       >
       Search

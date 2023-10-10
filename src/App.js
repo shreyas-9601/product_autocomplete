@@ -27,39 +27,35 @@ function App() {
         });
   }, [productData]);
 
-const handleSearch = (matchingProducts) => {
-  setSearchPerformed(true);
-  setProduct(matchingProducts);
+  const handleSearch = (matchingProducts) => {
+    setSearchPerformed(true);
+    onUpdateViews(matchingProducts);
+    setProduct(matchingProducts);
+    setTotalViews((prevTotalViews) => prevTotalViews + 1);
+  };
 
-  onUpdateViews(matchingProducts);
-};
-
-const onUpdateViews = (matchingProducts) => {
-  matchingProducts.forEach((matchingProduct, index) => {
-    setTimeout(() => {
-      axios
-        .put(
-          `https://65129b54b8c6ce52b395dff4.mockapi.io/api/v1/product/${matchingProduct.id}`,
-          { views: matchingProduct.views + 1 }
-        )
-        .then((response) => {
-          setProductData((prevData) =>
-            prevData.map((product) =>
-              product.id === matchingProduct.id ? response.data : product
-            )
-          );
-
-          setTotalViews((prevTotalViews) => prevTotalViews + 1);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }, index * 1000);
-      
-  });
-};
-
-  
+  const onUpdateViews = (matchingProducts) => {
+    matchingProducts.forEach((matchingProduct, index) => {
+      setTimeout(() => {
+        axios
+          .put(
+            `https://65129b54b8c6ce52b395dff4.mockapi.io/api/v1/product/${matchingProduct.id}`,
+            { views: matchingProduct.views + 1 }
+          )
+          .then((response) => {
+            setProductData((prevData) =>
+              prevData.map((product) =>
+                product.id === matchingProduct.id ? response.data : product
+              )
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }, index * 1000);
+        
+    });
+  };
 
   return (
     <div className="container bg-success">
@@ -74,19 +70,18 @@ const onUpdateViews = (matchingProducts) => {
       <div className="row">
         <div className="col">
           <SearchBar onSearch={handleSearch} productData={productData} />
-          {searchPerformed && product.length === 0 ? (
-            <div className="alert alert-danger">
-              <p>No products found</p>
-            </div>
-          ) : (
-            product.map((item) => (
-              <ProductDetails
-                key={item.id}
-                product={item}
-                searchPerformed={searchPerformed}
-              />
-            ))
-          )}
+          {searchPerformed &&
+            (product.length === 0 ? (
+              <div className="alert alert-danger">No product found</div>
+            ) : (
+              product.map((item) => (
+                <ProductDetails
+                  key={item.id}
+                  product={item}
+                  searchPerformed={searchPerformed}
+                />
+              ))
+            ))}
         </div>
 
         <div className="bg-primary text-white">

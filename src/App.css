@@ -1,3 +1,7 @@
+body{
+  background-color: rgb(105, 190, 166);
+}
+
 .suggestion-item {
   cursor: pointer ;
 }
@@ -39,4 +43,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.bg-primary text-white{
+  border: '2px solid #000';
+  padding-left: 7px;
+  margin-top: 2px;
 }
